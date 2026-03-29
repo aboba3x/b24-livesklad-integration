@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Связь сделок LS x B24",
+  "version": "2.5.0",
+  "description": "Безопасная интеграция LiveSklad и Bitrix24",
+  "permissions": [
+    "storage",
+    "notifications"
+  ],
+  "host_permissions": [
+    "https://*.livesklad.com/*",
+    "https://*.m-up.ru/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*.livesklad.com/*"],
+      "js": ["content.js"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Связь сделок LS x B24"
+  }
+}

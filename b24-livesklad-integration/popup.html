@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Связь сделок LS x B24</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; width: 320px; padding: 15px; margin: 0; color: #333; }
+        h3 { margin-top: 0; margin-bottom: 10px; font-size: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; text-align: center; position: relative; }
+        
+        #login-screen { display: none; text-align: center; padding: 20px 0; }
+        #app-screen { display: none; }
+        
+        input[type="text"] { width: 80%; padding: 8px; margin-bottom: 10px; text-align: center; font-size: 14px; border: 1px solid #ccc; border-radius: 4px; }
+        button { background: #0063c6; color: white; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #0056b3; }
+        #login-error { color: #dc3545; font-size: 14px; margin-top: 10px; display: none; font-weight: bold; }
+
+        .header-actions { position: absolute; right: 0; top: 0; }
+        #logout-btn { background: none; border: none; color: #dc3545; font-size: 11px; cursor: pointer; padding: 2px; font-weight: normal; }
+        #logout-btn:hover { text-decoration: underline; }
+
+        .summary { text-align: center; font-weight: bold; margin-bottom: 15px; color: #0063c6; font-size: 14px; }
+        .deal-list { max-height: 250px; overflow-y: auto; padding: 0; margin: 0; list-style: none; }
+        .deal-item { margin-bottom: 8px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 4px; }
+        .deal-link { display: block; padding: 8px 10px; text-decoration: none; color: #0056b3; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .deal-link:hover { background: #e2e6ea; border-radius: 4px; }
+        .loading, .error { text-align: center; font-size: 13px; color: #666; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h3>
+        Связь LS x B24
+        <div class="header-actions" id="header-actions" style="display: none;">
+            <button id="logout-btn">Сменить токен</button>
+        </div>
+    </h3>
+
+    <div id="login-screen">
+        <p style="font-size: 13px; margin-bottom: 15px;">Введите токен доступа:</p>
+        <input type="text" id="pin-input" placeholder="Ваш токен">
+        <br>
+        <button id="login-btn">Войти</button>
+        <div id="login-error">Ошибка!</div>
+    </div>
+
+    <div id="app-screen">
+        <div id="summary" class="summary">Загрузка данных...</div>
+        <ul id="deal-list" class="deal-list"></ul>
+    </div>
+    
+    <script src="popup.js"></script>
+</body>
+</html>
