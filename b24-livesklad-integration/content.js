@@ -46,13 +46,21 @@ function processTableRows() {
             chrome.runtime.sendMessage(
                 { action: "checkPhoneInBitrix", phone: phone },
                 (response) => {
+                    // Если сделка нашлась в Битриксе
                     if (response && response.success && response.found) {
-                        injectBadge(phoneEl, true, response.dealId);
                         
+                        // ПЕРЕДАЕМ ВСЕ ПАРАМЕТРЫ, ВКЛЮЧАЯ ИНФОРМАЦИЮ О ЗАКРЫТИИ (response.wasClosed)
+                        injectBadge(phoneEl, true, response.dealId, response.wasClosed);
+                        
+                        // Формируем текст уведомления в зависимости от того, закрылась сделка или нет
+                        const notificationMsg = response.wasClosed 
+                            ? `Сделка с номером ${phone} автоматически успешно закрыта в B24!` 
+                            : `Сделка с номером ${phone} требует внимания в B24!`;
+
                         chrome.runtime.sendMessage({ 
                             action: "showNotification", 
-                            title: "Действие в Битрикс24", 
-                            message: `Сделка с номером ${phone} находится на активном этапе!` 
+                            title: "Автоматизация B24", 
+                            message: notificationMsg 
                         });
                     }
                 }
@@ -61,17 +69,28 @@ function processTableRows() {
     });
 }
 
-function injectBadge(element, isFound, dealId) {
+function injectBadge(element, isFound, dealId, wasClosed) {
     const badge = document.createElement('span');
     badge.style.marginLeft = '8px';
     badge.style.padding = '2px 6px';
     badge.style.borderRadius = '4px';
     badge.style.fontSize = '11px';
     badge.style.fontWeight = 'bold';
-    badge.style.backgroundColor = '#d4edda';
-    badge.style.color = '#155724';
-    badge.style.border = '1px solid #c3e6cb';
-    badge.innerText = '⚠️ Требует перемещения (B24)';
+    
+    if (wasClosed) {
+        // Если робот успешно закрыл сделку
+        badge.style.backgroundColor = '#d1e7dd';
+        badge.style.color = '#0f5132';
+        badge.style.border = '1px solid #badbcc';
+        badge.innerText = '✅ Закрыта в B24';
+        badge.title = 'Эта сделка автоматически переведена в статус "Успешна" в Битрикс24';
+    } else {
+        // Если сделка нашлась, но по какой-то причине не закрылась
+        badge.style.backgroundColor = '#fff3cd';
+        badge.style.color = '#664d03';
+        badge.style.border = '1px solid #ffecb5';
+        badge.innerText = '⚠️ Найдена в B24 (Требует внимания)';
+    }
     
     element.parentNode.insertBefore(badge, element.nextSibling);
 }
